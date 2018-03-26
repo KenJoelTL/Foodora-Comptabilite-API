@@ -4,10 +4,13 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Joel/Documents/NetBeansProjects/Foodora-Compatibilite-API/src/java/filtre/ResponseCORSFiltre.java</file>
-            <file>file:/C:/Users/Joel/Documents/NetBeansProjects/Foodora-Compatibilite-API/web/index.html</file>
-            <file>file:/C:/Users/Joel/Documents/NetBeansProjects/Foodora-Compatibilite-API/src/java/com/foodora/comptabilite/modele/service/ItemTransactionFacadeREST.java</file>
-            <file>file:/C:/Users/Joel/Documents/NetBeansProjects/Foodora-Compatibilite-API/src/java/com/foodora/comptabilite/modele/service/TransactionFacadeREST.java</file>
             <file>file:/C:/Users/Joel/Documents/NetBeansProjects/Foodora-Compatibilite-API/src/java/com/foodora/comptabilite/modele/service/AbstractFacade.java</file>
+            <file>file:/C:/Users/Joel/Documents/NetBeansProjects/Foodora-Compatibilite-API/web/index.html</file>
+            <file>file:/C:/Users/Joel/Documents/NetBeansProjects/Foodora-Compatibilite-API/src/java/com/foodora/comptabilite/modele/service/TransactionFacadeREST.java</file>
+            <file>file:/C:/Users/Joel/Documents/NetBeansProjects/Foodora-Compatibilite-API/src/java/com/foodora/comptabilite/modele/service/ApplicationConfig.java</file>
+            <file>file:/C:/Users/Joel/Documents/NetBeansProjects/Foodora-Compatibilite-API/src/java/com/foodora/comptabilite/modele/Transaction.java</file>
+            <file>file:/C:/Users/Joel/Documents/NetBeansProjects/Foodora-Compatibilite-API/src/java/com/foodora/comptabilite/modele/DAO/ItemTransactionDAO.java</file>
+            <file>file:/C:/Users/Joel/Documents/NetBeansProjects/Foodora-Compatibilite-API/src/java/com/foodora/comptabilite/modele/service/ItemTransactionFacadeREST.java</file>
         </group>
     </open-files>
 </project-private>
