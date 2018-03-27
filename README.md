@@ -16,11 +16,12 @@ _______________________________________________________________
 ## POST : Ajouter des données
 /comptabilite/transaction
 
-Données dans le corps de la requête : 
+**Données dans le corps de la requête :**
 
  Transaction : { int idSuccursale ,
                  int idClient,
                  String date,
+                 ArrayList itemsCommandes,
                  double sousTotal,
                  double pourboireCoursier }
 _______________________________________________________________
@@ -61,4 +62,3 @@ _______________________________________________________________
  ItemTransaction : { String code,
                      int idTransaction,
                      int quantite }
-
