@@ -114,7 +114,7 @@ public class ItemTransactionDAO extends DAO<ItemTransaction> {
     public boolean update(ItemTransaction x) {
 
          String req = "UPDATE ITEM_TRANSACTION SET CODE = ?, ID_TRANSACTION = ?,"
-                + "QUANTITE= ?";
+                + "QUANTITE= ? WHERE ID = ?";
 
         PreparedStatement paramStm = null;
         try {
@@ -126,6 +126,7 @@ public class ItemTransactionDAO extends DAO<ItemTransaction> {
                 paramStm.setString(1, (x.getCode()));
                 paramStm.setInt(2, (x.getIdTransaction()));
                 paramStm.setInt(3, x.getQuantite());
+                paramStm.setInt(4, x.getId());
 
 
                 int nbLignesAffectees = paramStm.executeUpdate();
@@ -162,7 +163,6 @@ public class ItemTransactionDAO extends DAO<ItemTransaction> {
             int nbLignesAffectees = paramStm.executeUpdate();
             if (nbLignesAffectees > 0) {
                 paramStm.close();
-                System.out.println("test6");
                 return true;
 
             }
