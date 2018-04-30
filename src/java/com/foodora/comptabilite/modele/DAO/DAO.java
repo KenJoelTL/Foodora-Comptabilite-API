@@ -29,10 +29,10 @@ public abstract class DAO<T> {
 		this.cnx = cnx;
 	}
 
-	public abstract boolean create(T x);    //INSERT
+	public abstract int create(T x);        //INSERT
 	public abstract T retrieve(int id);     //SELECT
 	public abstract T retrieve(String id);  //SELECT
-	public abstract boolean update(T x);    //UPDATE
+	public abstract int update(T x);        //UPDATE
 	public abstract boolean delete(T x);    //DELETE
 	public abstract List<T> findAll();      //SELECT
 }

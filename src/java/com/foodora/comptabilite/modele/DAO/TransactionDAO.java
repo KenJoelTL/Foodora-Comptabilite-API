@@ -24,26 +24,26 @@ import java.util.logging.Logger;
 public class TransactionDAO extends DAO<Transaction> {
 
     @Override
-    public boolean create(Transaction x) {
-
-        System.out.println("creaaaaateeeeeeeeeeeeeeeeee");
+    public int create(Transaction x) {
+        int n = 0;
 
         String req = "INSERT INTO transaction (`ID_SUCCURSALE` , `ID_CLIENT`, `SOUS_TOTAL`, `POURBOIRE_COURSIER`) VALUES "
                 + "(?,?,?,?)";
         System.out.println("test6");
         PreparedStatement paramStm = null;
         try {
-            System.out.println("test7");
-            paramStm = cnx.prepareStatement(req);
-
-            System.out.println("test8");
+            paramStm = cnx.prepareStatement(req, Statement.RETURN_GENERATED_KEYS);
             paramStm.setInt(1, x.getIdSuccursale());
             paramStm.setInt(2, x.getIdClient());
             paramStm.setDouble(3, x.getSousTotal());
             paramStm.setDouble(4, x.getPourboireCoursier());
-            int n = paramStm.executeUpdate();
-            System.out.println("test9");
             
+            paramStm.executeUpdate();
+            
+            ResultSet rs = paramStm.getGeneratedKeys();
+            if(rs.next()){
+                n = rs.getInt(1);
+            }
             //Créer les items de la transaction courrante
             ItemTransactionDAO itDao = new ItemTransactionDAO();
             itDao.setCnx(cnx);
@@ -52,11 +52,7 @@ public class TransactionDAO extends DAO<Transaction> {
             }
             
             
-            if (n > 0) {
-                paramStm.close();
-                //stm.close();
-                return true;
-            }
+            
         } catch (SQLException exp) {
         } finally {
             try {
@@ -68,7 +64,7 @@ public class TransactionDAO extends DAO<Transaction> {
             }
 
         }
-        return false;
+        return n;
     }
 
     @Override
@@ -133,7 +129,8 @@ public class TransactionDAO extends DAO<Transaction> {
     }
 
     @Override
-    public boolean update(Transaction x) {
+    public int update(Transaction x) {
+        int nbLignesAffectees  = 0;
         String req = "UPDATE transaction SET ID_CLIENT = ?, ID_SUCCURSALE = ?,"
                 + "DATE_TRANSACTION = ?, SOUS_TOTAL = ?,"
                 + " POURBOIRE_COURSIER = ? WHERE ID_TRANSACTION = ?";
@@ -142,8 +139,7 @@ public class TransactionDAO extends DAO<Transaction> {
         try {
             paramStm = cnx.prepareStatement(req);
 
-            if (x.getDate() != null && !"".equals(x.getDate().trim())
-                    && x.getSousTotal() > 0 && x.getIdClient() > 0
+            if (x.getSousTotal() >= 0 && x.getIdClient() > 0
                     && x.getIdSuccursale() > 0 && x.getPourboireCoursier() >= 0) {
                 paramStm.setInt(1, (x.getIdClient()));
                 paramStm.setInt(2, (x.getIdSuccursale()));
@@ -152,14 +148,9 @@ public class TransactionDAO extends DAO<Transaction> {
                 paramStm.setDouble(5, x.getPourboireCoursier());
                 paramStm.setInt(6, x.getId());
 
-                int nbLignesAffectees = paramStm.executeUpdate();
+                nbLignesAffectees = paramStm.executeUpdate();
 
-                if (nbLignesAffectees > 0) {
-                    paramStm.close();
-                    return true;
-                }
             }
-            return false;
         } catch (SQLException exp) {
             System.out.println(exp.getMessage());
         } finally {
@@ -173,7 +164,7 @@ public class TransactionDAO extends DAO<Transaction> {
             }
 
         }
-        return false;
+        return nbLignesAffectees;
 
     }
 
