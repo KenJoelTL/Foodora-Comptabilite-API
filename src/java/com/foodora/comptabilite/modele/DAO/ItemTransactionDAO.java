@@ -23,25 +23,25 @@ import java.util.logging.Logger;
 public class ItemTransactionDAO extends DAO<ItemTransaction> {
 
     @Override
-    public boolean create(ItemTransaction x) {
-
+    public int create(ItemTransaction x) {
+        int n = 0;
         String req = "INSERT INTO ITEM_TRANSACTION(`CODE` , `ID_TRANSACTION`, `QUANTITE`) VALUES (?,?,?)";
         PreparedStatement paramStm = null;
         try {
             System.out.println("test7");
-            paramStm = cnx.prepareStatement(req);
+            paramStm = cnx.prepareStatement(req, Statement.RETURN_GENERATED_KEYS);
 
             System.out.println("test8");
             paramStm.setString(1, x.getCode());
             paramStm.setInt(2, x.getIdTransaction());
             paramStm.setInt(3, x.getQuantite());
-            int n = paramStm.executeUpdate();
+            paramStm.executeUpdate();
             System.out.println("test9");
-            if (n > 0) {
-                paramStm.close();
-                //stm.close();
-                return true;
+            ResultSet rs = paramStm.getGeneratedKeys();
+            if(rs.next()){
+                n = rs.getInt(1);
             }
+            return n;
         } catch (SQLException exp) {
         } finally {
             try {
@@ -53,7 +53,7 @@ public class ItemTransactionDAO extends DAO<ItemTransaction> {
             }
 
         }
-        return false;
+        return n;
     }
 
     @Override
@@ -111,9 +111,9 @@ public class ItemTransactionDAO extends DAO<ItemTransaction> {
     }
 
     @Override
-    public boolean update(ItemTransaction x) {
-
-         String req = "UPDATE ITEM_TRANSACTION SET CODE = ?, ID_TRANSACTION = ?,"
+    public int update(ItemTransaction x) {
+        int nbLignesAffectees = 0;
+        String req = "UPDATE ITEM_TRANSACTION SET CODE = ?, ID_TRANSACTION = ?,"
                 + "QUANTITE= ? WHERE ID = ?";
 
         PreparedStatement paramStm = null;
@@ -129,14 +129,9 @@ public class ItemTransactionDAO extends DAO<ItemTransaction> {
                 paramStm.setInt(4, x.getId());
 
 
-                int nbLignesAffectees = paramStm.executeUpdate();
-
-                if (nbLignesAffectees > 0) {
-                    paramStm.close();
-                    return true;
-                }
+                nbLignesAffectees = paramStm.executeUpdate();
             }
-            return false;
+            
         } catch (SQLException exp) {
             System.out.println(exp.getMessage());
         } finally {
@@ -150,7 +145,7 @@ public class ItemTransactionDAO extends DAO<ItemTransaction> {
             }
 
         }
-        return false;
+        return nbLignesAffectees;
     }
 
     @Override

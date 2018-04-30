@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import jdbc.Config;
 import jdbc.Connexion;
 
@@ -25,7 +27,7 @@ import jdbc.Connexion;
  *
  * @author Joel
  */
-public abstract class AbstractFacade<T> {
+public class AbstractFacade<T> {
 
     private Class<T> entityClass;
     private DAO dao;
@@ -39,37 +41,54 @@ public abstract class AbstractFacade<T> {
         }
     }
 
-    public void create(T entity) {
+    public Response create(T entity) {
+//        JSONobject jo = new JSONobject();
+//        Gson gson = new gson();
+        ResponseBuilder builder = Response.status(Response.Status.BAD_REQUEST);
+        int id = 0;
+        String jsonMessage = "\"message\":\"Erreur dans la création de l'entité\"}";
         try {
             Class.forName(Config.DRIVER);
             Connection cnx = Connexion.getInstance();
             dao.setCnx(cnx);
-            if (dao.create(entity)) {
-                System.out.println("SUCCES !");
+            id = dao.create(entity);   
+            if(id > 0){
+                jsonMessage = "\"message\":\"L'élément a été créée avec succès\"}";
+                builder.status(Response.Status.CREATED);
             }
-            //message d'erreur en JSON { "Error" : Aucune données trouvé, "Resultat" : {} }
 
         } catch (SQLException | ClassNotFoundException e) {
+            builder.status(Response.Status.SERVICE_UNAVAILABLE);
         } finally {
             Connexion.close();
         }
+        String jsonId = "{\"id\":"+id+",";
+        builder.entity(jsonId + jsonMessage);
+        return  builder.build();
     }
 
-    public void edit(T entity) {
+    public Response edit(T entity) {
+        ResponseBuilder builder = Response.status(Response.Status.BAD_REQUEST);
+        String jsonMessage = "\"message\":\"Erreur dans la création de l'entité\"}";
+        int nb = 0;
         try {
             Class.forName(Config.DRIVER);
             Connection cnx = Connexion.getInstance();
             dao.setCnx(cnx);
-
-            if (dao.update(entity)) {
-                System.out.println("SUCCES !");
+            nb = dao.update(entity);   
+            if(nb > 0){
+                jsonMessage = "\"message\":\"L'élément a été créée avec succès\"}";
+                builder.status(Response.Status.ACCEPTED);
             }
-            //message d'erreur en JSON { "Error" : Aucune données trouvé, "Resultat" : {} }
 
         } catch (SQLException | ClassNotFoundException e) {
+            builder.status(Response.Status.SERVICE_UNAVAILABLE);
         } finally {
             Connexion.close();
         }
+        String jsonId = "{\"nombreModifie\":"+nb+",";
+        builder.entity(jsonId + jsonMessage);
+        return builder.build();
     }
 
     public void remove(T entity) {
